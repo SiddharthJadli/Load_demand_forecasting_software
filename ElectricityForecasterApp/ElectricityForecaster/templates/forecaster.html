@@ -1,0 +1,80 @@
+{% extends "master.html" %}
+
+{% block title %}
+Electricity forecaster
+{% endblock %}
+
+
+{% block content %}
+<h1>Forecaster</h1>
+
+
+<div id="explainforecaster" >
+
+    <p>Input your data file into the form below to produce a 48-hour electricity demand
+        prediction using the <b>Predict Demand</b> tab.</p>
+    <p>Alternatively, provide the actual electricty demand and weather values for the past 24 or 48 hours using the <b>Upload Actual Values</b> tab.</p>
+    <p>When uploading files in <b>Predict Demand</b>, please provide one file that contains the next 48 hours to predict, 
+        <b>or</b> provide <b>two</b> 24 hour files <b>at once</b>. The form will <b>not</b> accept one file at a time.</p>
+        <p>You can select two files at once using the <b>CTRL SHIFT</b> for Windows, or <b>CMD SHIFT</b> keys for Mac. </p>
+    <p>For the <b>Upload Actual Values</b> tab, you may upload one or two </p>
+    <p>Please allow some time (few minutes) for the files to process and/or for predictions to be made.</p>
+
+
+</div>
+
+
+<div class="container">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#predictdemand">Predict demand</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#uploadactuals">Upload actual values</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane container active" id="predictdemand">
+            {% include 'predict_demand_tab.html' %}
+
+        </div>
+        <div class="tab-pane container fade" id="uploadactuals">
+            {% include 'upload_actuals_tab.html' %}
+        </div>
+
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    const activeTab = '{{ active_tab }}'; // Use the value from the context
+
+    $(document).ready(function () {
+        // Initialize the tab switching
+        $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+
+        // Handle tab switching and store active tab in localStorage
+        $('.nav-tabs a').on('shown.bs.tab', function (event) {
+            const newActiveTab = event.target.getAttribute('href');
+            localStorage.setItem('activeTab', newActiveTab);
+        });
+
+        // Restore active tab from localStorage on page load
+        const storedActiveTab = localStorage.getItem('activeTab');
+        if (storedActiveTab) {
+            $('.nav-tabs a[href="' + storedActiveTab + '"]').tab('show');
+        }
+
+        // ... Rest of your JavaScript code ...
+    });
+</script>
+
+
+{% endblock %}

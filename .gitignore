@@ -1,0 +1,11 @@
+/__pycache__
+**/ElectricityForecasterApp/.venv/
+/.vscode
+/.venv
+**/ElectricityForecasterApp/__pycache__
+**/ElectricityForecasterApp/electricity_forecaster/__pycache__
+**/ElectricityForecasterApp/ElectricityForecaster/__pycache__
+**/ElectricityForecasterApp/node_modules
+**/Train/.ipynb_checkpoints
+**/.ipynb_checkpoints 
+**/ElectricityForecasterApp/forecaster

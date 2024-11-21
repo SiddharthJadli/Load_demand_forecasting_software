@@ -1,0 +1,9 @@
+pip install psycopg2-binary 
+pip install pandas 
+pip install plotly 
+pip install statsmodels 
+pip install sklearn 
+pip install joblib 
+pip install xgboost 
+pip install skforecast 
+pip install numpy

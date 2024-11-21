@@ -1,0 +1,39 @@
+<p>
+
+
+</p>
+<div class="container">
+    <div class="row mt-8">
+
+        <div class="col offset">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <p>Last predicted date: {{last_predicted_date}}</p>
+                    <p>Provide the next 48 hours variables here:</p>
+                    <form method="POST" class="post-form" name="tab" value="predictdemand"
+                        enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="tab" value="predictdemand" multiple>
+                        {{ predict_demand_form.as_p }}
+                        <button type="submit " class="btn btn-primary mb-3">Save</button>
+                    </form>
+
+                    {% if predict_message %}
+                    <p>{{predict_message}}</p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- 
+<div id="chart"></div> -->
+{% if uploaded %}
+<div>
+    {{ pred_plot|safe }}
+</div>
+{% endif %}

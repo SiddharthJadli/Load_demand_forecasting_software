@@ -1,0 +1,8 @@
+{
+    "datetime": "datetime64[ns]",
+    "temperature": "float64",
+    "cloud_cover": "float64",
+    "wind_direction": "float64",
+    "wind_speed": "float64",
+    "pressure": "float64"
+}

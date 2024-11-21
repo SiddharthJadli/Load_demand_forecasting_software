@@ -1,0 +1,130 @@
+<p>
+
+
+</p>
+<div class="container">
+    <div class="row mt-8">
+
+        <div class="col offset">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <p>You can upload data up to: {{ last_actual_date }}</p>
+                    <p>Upload the actual values here:</p>
+                    <form method="POST" class="post-form" name="tab" value="uploadactuals"
+                        enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="tab" value="uploadactuals">
+                        {{ upload_actuals_form.as_p }}
+                        <button type="submit" class="btn btn-primary mb-3">Save</button>
+                    </form>
+                    {% if actual_message %}
+                    <p>{{ actual_message }}</p>
+                    {% if valid %}
+                    <h5 class="centered-header">Error Measures:</h5>
+                    <p>
+                        <strong>MAE:</strong> {{ mae }} <br>
+                        <strong>MAPE:</strong> {{ mape }} <br>
+                        <strong>RMSE:</strong> {{ rmse }} <br>
+
+                    </p>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{{ actualdatetime|json_script:"actualdatetime" }}
+{{ actualload|json_script:"actualload" }}
+{{ predictions|json_script:"predictions" }}
+
+<!-- {% if uploaded %}
+<div id="chart2"></div>
+{% endif %} -->
+
+
+{% if uploaded %}
+<div id="plot-container">
+    {{ actual_plot|safe }}
+</div>
+{% endif %}
+
+<script>
+
+    var actualtime = JSON.parse(document.getElementById('actualdatetime').textContent)
+    var actualload = JSON.parse(document.getElementById('actualload').textContent)
+    var predictions = JSON.parse(document.getElementById('predictions').textContent)
+
+    var options = {
+        series: [
+            {
+                name: "Predicted",
+                data: predictions
+            },
+            {
+                name: "Actual",
+                data: actualload
+            }
+        ],
+        chart: {
+            height: 350,
+            type: 'line',
+            dropShadow: {
+                enabled: true,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        colors: ['#FF0000', '#77B6EA'],
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        title: {
+            text: 'Actual vs Predicted Load',
+            align: 'center'
+        },
+        grid: {
+            borderColor: '#e7e7e7',
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+            },
+        },
+        markers: {
+            size: 1
+        },
+        xaxis: {
+            categories: actualtime,
+            title: {
+                text: 'Time'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Load (kW)'
+            },
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right',
+            floating: true,
+            offsetY: -25,
+            offsetX: -5
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart2"), options);
+    chart.render();
+</script>

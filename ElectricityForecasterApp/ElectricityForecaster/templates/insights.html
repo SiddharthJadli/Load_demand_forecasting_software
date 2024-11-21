@@ -1,0 +1,273 @@
+{% extends "master.html" %}
+
+{% block title %}
+Electricity forecaster
+{% endblock %}
+
+{% block content %}
+<h1>Insights</h1>
+
+<p>This page will provide a statistical summary of the dataset which the forecasting model was built on.
+</p>
+
+
+<h5 class="centered-header">Complete data: </h5>
+<p>
+    Below is our entire training dataset which we have trained our model on. The dataset spans from March 18, 2017, to January 15, 2021, encompassing load values both before and after the onset of the COVID-19 pandemic. Notably, a substantial decline in load occurred on March 9, 2020, marking the beginning of the pandemic’s impact. This could be a result of business, offices and industries closing down as lockdown is enforced. Interestingly, the electricity load after COVID has consistently remained lower than the load observed before the pandemic.
+</p>
+<div>{{ complete_data|safe }}</div>
+
+<h5 class="centered-header">Statistical summary of the data: </h5>
+<p>
+    This statistical summary of the data includes several key metrics: count, which indicates the number of data points in the dataset; the mean, which is the average value of the data; the standard deviation, a measure of how spread out the data is; the minimum and maximum values to show the range of data and the quartiles represented as 25%, 50% and 75%, which gives us insights into the data’s distribution. These statistical summary offer a comprehensive view of the dataset’s central tendencies, variability and distribution characteristics.
+</p>
+<div class="container mt-5">
+    <!-- Bootstrap table to display summaries -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <!-- Loop through the column names in the first row of data -->
+                {% for column_name in summary.columns %}
+                <th>{{ column_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through rows of data -->
+            {% for row in summary.iterrows %}
+            <tr>
+                <!-- Include the index value (like count, max, min, etc.) -->
+                <td>{{ row.0 }}</td>
+                <!-- Loop through values in each row -->
+                {% for value in row.1 %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h5>
+    Seasonality charts:
+</h5>
+<p>
+    These graphs provide valuable insights into the dynamic patterns of electricity consumption across various time periods. They provide invaluable information for energy suppliers to strategise and optimise their resources. With these graphs, energy suppliers can fine-tune their operations to ensure an efficient and dependable power supply that aligns with the fluctuating consumption. 
+
+</p>
+
+<h6 class="centered-header">Average Load based on months: </h6>
+<p>
+    The graph below illustrates the monthly seasonalities of electricity loads and shows how it fluctuates throughout the year. The y-axis represents the electricity consumption in kiloWatts and the x-axis represents the months of the year. The load is significantly lower during the first couple of months of the year and steadily climbs in May and September. It then decreases drastically from October onwards. This could be attributed to the change in seasons, where more electricity is used in the colder months from May up to October due to the increase in heating required.
+</p>
+<div id="monthlydatachart" style="padding-right: 2rem;"></div>
+
+
+<h6 class="centered-header">Average Load based on weekdays: </h6>
+<p>
+    This graph illustrates the fluctuation in electricity consumption over a weekly cycle. The graph shows the highest load during the weekdays where industries, businesses and offices operate at full capacity. The load then drastically drops over the weekend when most households are home and businesses and offices are closed. 
+</p>
+<div id="weeklydatachart" style="padding-right: 2rem;"></div>
+
+<h6 class="centered-header">Average Load based on daily hours: </h6>
+<p>
+    This graph illustrates the daily seasonality of the load and offers a dynamic depiction of how electricity consumption varies throughout the day. The graph reveals the pattern where electricity consumption is at its lowest during the early morning hours where most households are asleep and demand for appliances and lighting is minimal. As the day progresses, the electricity load steadily increases, peaks and remains constant throughout the afternoon. This surge in electricity could be due to workplaces, educational institutions and households all simultaneously using electricity for lighting, heating or cooling and various appliances. It slowly decreases again during the evening and night time when people return home from work and public places begin to close for the day.
+</p>
+<div id="hourlydatachart" style="padding-right: 2rem;"></div>
+
+<h5 class="centered-header">Correlation matrix of the weather variables: </h5>
+<p>
+    The correlation matrix heatmap serves as a valuable tool for visualising the relationships between the five weather variables and electricity load. While each variable's correlation with itself is naturally one (as it should be), our primary interest lies in understanding the correlations between different variables, especially between each weather parameter and the load. Notably, the heatmap highlights that wind direction exhibits the strongest correlation with load, closely followed by temperature and wind speed. Conversely, cloud cover and pressure demonstrate comparatively lower correlations, suggesting that they may have limited utility in predicting load patterns.
+</p>
+<div id="correlation_heatmap">{{ corr_matrix|safe }}</div>
+
+<h5 class="centered-header">Correlation scatter plots of all the variables: </h5>
+<p>
+    The correlation between the weather variables and load can be more closely examined in the following plots.
+</p>
+<div id="correlation_scatter">{{ corr_scatter|safe }}</div>
+
+<h5 class="centered-header">Closer look at the correlation between load and weather variables: </h5>
+<p>
+    While the correlation heatmap visualised the magnitude of correlations, the following bar chart also shows the direction of this correlation. Interestingly, pressure is the only weather variable which exhibits a negative correlation with load, meaning that higher pressure should idealy produce lower predictions for load, all else equal. On the other hand, a variable like temperature has a positive correlation, which is intuitive given that higher temperatures can mean a higher use of air conditioning or refridgeration. It is also clearer here to see that cloud coverage appears to have little to no correlation with load, which means it may only be useful to the model for its interactive effects with the other variables.
+</p>
+<div id="correlation_scatter">{{ bar_chart|safe }}</div>
+
+<h5 class="centered-header">Autocorrelation and Partial autocorrelation: </h5>
+<p>
+In the Autocorrelation Function (ACF) plot of the electricity load consumption data, a notable wave-like pattern emerges, with peaks occurring approximately every 24 lags. This pattern suggests a strong daily seasonality in the data, indicating that electricity load is highly correlated with the same time of day, repeating roughly every 24 hours. The diminishing height of these peaks as we move further back in time signifies that the correlation between the current hour's load and load from previous hours weakens with increasing time lags, which is a common temporal behavior in time series data. Interestingly, the ACF plot reveals a significant increase in peak height after one week (168 lags), indicating a weekly seasonality pattern, which is what would intuitively be expected.
+
+Turning to the Partial Autocorrelation Function (PACF) plot, the first lag exhibits a high measurement, indicating a strong direct relationship between the current hour's load and the load from the previous hour. This observation is indicative of an autoregressive component in the time series model, where current values are influenced by their immediate predecessors. There is also a strong, albeit negative partial correlation with the second and third lag, suggesting that high load consumption two-three hours ago is associated with lower load consumption in the current hour. Subsequently, the PACF values largely fluctuate around zero for lags beyond the third, indicating that, once the effects of these key lags are accounted for, there isn't a substantial direct relationship between the current load and load at other hours. Interestingly, the PACF values notably deviate from this trend at multiples of 24 (e.g., 48th lag, 72nd lag), reinforcing the presence of a weekly seasonality component in the data.
+
+</p>
+<div id="correlation_scatter">{{ pacf_plots|safe }}</div>
+
+
+{{ monthly_data|json_script:"monthly_data" }}
+{{ weekly_data|json_script:"weekly_data" }}
+{{ daily_data|json_script:"daily_data" }}
+
+
+<script>
+
+    const insightMonthlyData = JSON.parse(document.getElementById('monthly_data').textContent);
+    const insightWeeklyData = JSON.parse(document.getElementById('weekly_data').textContent);
+    const insightDailyData = JSON.parse(document.getElementById('daily_data').textContent);
+
+    // const insights_time_records = insightData.map(item => item.datetime);
+    // const insights_load_records = insightData.map(item => item.load);
+    const insights_monthly_dates = insightMonthlyData.map(item => item.month);
+    const insights_monthly_avg_load = insightMonthlyData.map(item => item.avg_load);
+
+    const insights_weekly_dates = insightWeeklyData.map(item => item.type_of_day);
+    const insights_weekly_avg_load = insightWeeklyData.map(item => item.avg_load);
+
+    const insights_daily_dates = insightDailyData.map(item => item.hour);
+    const insights_daily_avg_load = insightDailyData.map(item => item.avg_load);
+
+    var monthlyoptions = {
+        series: [{
+            name: "Average Monthly Load",
+            data: insights_monthly_avg_load
+        }],
+        chart: {
+            height: 350,
+            type: 'line',
+            zoom: {
+                enabled: false
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'straight'
+        },
+        title: {
+            text: 'Average load per month',
+            align: 'centre'
+        },
+        grid: {
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+            },
+        },
+        xaxis: {
+            categories: insights_monthly_dates,
+        }
+    };
+    var monthlychart = new ApexCharts(document.querySelector("#monthlydatachart"), monthlyoptions);
+    monthlychart.render();
+
+    var weeklyoptions = {
+        series: [{
+            name: "Average Weekly Load",
+            data: insights_weekly_avg_load
+        }],
+        chart: {
+            height: 350,
+            type: 'line',
+            zoom: {
+                enabled: false
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'straight'
+        },
+        title: {
+            text: 'Average load per week day',
+            align: 'centre'
+        },
+        grid: {
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+            },
+        },
+        xaxis: {
+            categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        }
+    };
+    var weeklychart = new ApexCharts(document.querySelector("#weeklydatachart"), weeklyoptions);
+    weeklychart.render();
+
+
+    var dailyoptions = {
+        series: [{
+            name: "Average Daily Load",
+            data: insights_daily_avg_load
+        }],
+        chart: {
+            height: 350,
+            type: 'line',
+            zoom: {
+                enabled: false
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'straight'
+        },
+        title: {
+            text: 'Average load per hour',
+            align: 'centre'
+        },
+        grid: {
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+            },
+        },
+        xaxis: {
+            categories: insights_daily_dates,
+        }
+    };
+    var dailychart = new ApexCharts(document.querySelector("#hourlydatachart"), dailyoptions);
+    dailychart.render();
+</script>
+
+
+{% endblock %}
+
+
+{% block css %}
+
+<style>
+    #monthlydatachart {
+        width: 80%;
+        /* Adjust the width as needed */
+        margin: 0 auto;
+        /* Center the container horizontally */
+    }
+
+    #dailydatachart {
+        width: 80%;
+        /* Adjust the width as needed */
+        margin: 0 auto;
+        /* Center the container horizontally */
+    }
+
+    #weeklydatachart {
+        width: 80%;
+        /* Adjust the width as needed */
+        margin: 0 auto;
+        /* Center the container horizontally */
+    }
+
+    .centered-header {
+        text-align: center;
+        /* Center the text horizontally */
+        margin-top: 50px;
+        /* Adjust the margin to center it vertically (optional) */
+    }
+</style>
+
+
+{% endblock %}

@@ -1,0 +1,8 @@
+MODEL,MAE,MAPE,RMSE
+naive_forecast,115,186.96,19,674,334,791.01,135,270.19	
+seasonal_forecast_daily,60,877.19,
+seasonal_forecast_weekly,
+seasonal_forecast_yearly,
+random_walk_forecast,
+linear_regression,
+

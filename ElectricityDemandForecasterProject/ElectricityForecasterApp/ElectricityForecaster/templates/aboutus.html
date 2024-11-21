@@ -1,0 +1,58 @@
+{% extends "master.html" %}
+
+{% block content %}
+<h1>About Us</h1>
+<p>
+    Our project represents the collaborative efforts of four data science students from Monash University, 
+    all in their third year of study. The primary goal of our project is to develop a robust forecasting model 
+    capable of predicting electricity load for the upcoming 48 hours. This task became particularly critical in 
+    the wake of the COVID-19 pandemic, as electricity load demands underwent significant fluctuations that traditional
+    models struggled to accurately capture. As a response, our project aims not only to build a prediction model that adapts 
+    effectively to such dynamic changes but also to integrate an automated retraining mechanism to ensure ongoing accuracy.
+</p>
+<p>
+    To achieve this objective, we explored three different modeling approaches: XGBoost, Random Forest, and Linear Regression. 
+    These models were rigorously tested against three benchmark models: Naive, Seasonal Naive (with varying seasonalities). 
+    Our findings revealed that all models outperformed the benchmarks, demonstrating their effectiveness. Among these models, 
+    XGBoost emerged as the preferred choice due to its consistent error measures, which closely matched those of Random Forest, 
+    while offering faster and more efficient performance.
+</p>
+<p>
+    Prior to commencing the modeling phase, extensive data preprocessing was carried out. This included thorough data cleaning, 
+    which involved addressing null values, handling outliers, ensuring accurate data types, and more. These preprocessing steps are also 
+    applied when users submit files to the system, ensuring data integrity throughout.
+</p>
+<p>
+    Moreover, Our project incorporates an automated retraining framework designed to monitor and address data drift, ensuring that the
+    model remains accurate over time. The selection of models and retraining frameworks was guided by a comprehensive literature review, 
+    drawing insights from similar cases in the field.
+</p>
+<p>
+    Our implementation of the model is designed to be multi-step, leveraging 48 instances of the XGBoost model to predict load for each 
+    hour within the 48-hour forecast window.
+</p>
+<p>
+    The heart of our project lies in the 'Forecaster' page, where users can submit two files, each containing 24 hours of load and weather 
+    data for the next two days, or a single file encompassing all 48 hours. The intuitive user interface generates prediction results in 
+    the form of informative graphs, plotting the forecasted load.
+</p>
+<p>
+    Users also have the option to upload 'actual' load values and real weather data from the preceding two days. The system then generates 
+    a comparison graph showcasing the actual versus predicted values, along with essential error metrics such as Mean Absolute Error (MAE), 
+    Mean Absolute Percentage Error (MAPE), and Root Mean Square Error (RMSE).
+</p>
+<p>
+    For a deeper historical perspective, the 'Historic Performance' page provides a comprehensive overview of all predictions made by the model 
+    to date. It displays associated error metrics, offering insights into the model's evolving performance.
+</p>
+<p>
+    Lastly, the 'Insights' page features a collection of graphs that delve into the dataset. These visualizations explore seasonality patterns 
+    and uncover correlations between variables, providing valuable insights into the nature of the data.
+</p>
+<p>
+    Our project represents a holistic approach to electricity demand forecasting, addressing the challenges posed by dynamic load patterns 
+    and incorporating automation for long-term accuracy.
+</p>
+
+{% endblock %}
+

@@ -1,0 +1,7 @@
+{
+    "temperature": [-20, 50],
+    "cloud_cover": [0, 100],
+    "pressure": [890, 1765720], 
+    "wind_direction": [0, 400], 
+    "wind_speed": [0, 69]
+}

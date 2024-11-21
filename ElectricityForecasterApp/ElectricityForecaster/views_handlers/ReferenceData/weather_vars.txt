@@ -1,0 +1,5 @@
+pressure
+cloud_cover
+temperature
+wind_direction
+wind_speed

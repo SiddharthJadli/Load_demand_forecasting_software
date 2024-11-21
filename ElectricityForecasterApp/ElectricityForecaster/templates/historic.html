@@ -1,0 +1,59 @@
+{% extends "master.html" %}
+
+{% block title %}
+Electricity forecaster
+{% endblock %}
+
+
+{% block content %}
+<h1>Historic performance</h1>
+
+<p>This page displays all the predictions that have been made by the model so far, including validation data.<br>
+    It also outlines the error measures MAE, MAPE and RMSE of the displayed data.
+</p>
+
+<h5 class="centered-header">All Predictions made so far: </h5>
+
+<h6 class="centered-header">Error Measures:</h6>
+<ul class="error-measures">
+    <li><strong>MAE:</strong> {{ mae }}</li>
+    <li><strong>MAPE:</strong> {{ mape }}%</li>
+    <li><strong>RMSE:</strong> {{ rmse }}</li>
+</ul>
+
+<div id="plot">{{ plot|safe }}</div>
+
+{% if zoomedplot%}
+<h5 class="centered-header">Closer look at all predictions made since deployment: </h5>
+
+<h6 class="centered-header">Error Measures:</h6>
+<ul class="error-measures">
+    <li><strong>MAE:</strong> {{ zoomedmae }}</li>
+    <li><strong>MAPE:</strong> {{ zoomedmape }}%</li>
+    <li><strong>RMSE:</strong> {{ zoomedrmse }}</li>
+</ul>
+{% endif %}
+
+<div id="plot">{{ zoomedplot|safe }}</div>
+
+
+<!-- <h5 class="centered-header">History into our Model Selection process: </h5> -->
+
+
+
+<style>
+    .error-measures {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .error-measures li {
+        margin-right: 20px;
+        font-size: 16px;
+    }
+</style>
+
+{% endblock %}

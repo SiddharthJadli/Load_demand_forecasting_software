@@ -1,0 +1,8 @@
+{
+    ".*time.*|.*Time.*|.*date.*": "datetime",
+    ".*load.*|.*Load.*": "load",
+    ".*temp.*|.*Temp.*": "temperature",
+    ".*cloud.*|.*Cloud.*|.*cover.*|.*Cover.*": "cloud_cover",
+    ".*direction.*|.*Direction.*|.*dir.*|.*Dir.*": "wind_direction",
+    ".*speed.*|.*Speed.*|.*sp.*|.*Sp.*": "wind_speed",
+    ".*pres.*|.*Pres.*": "pressure"}

@@ -1,0 +1,7 @@
+datetime
+load
+temperature
+cloud_cover
+wind_direction
+wind_speed
+pressure
